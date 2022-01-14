@@ -18,7 +18,7 @@ with open('test.txt', 'r') as file:
 
 ##################### Resource Parameters (mostly memory based) ##################### 
 
-int allotted_ram_mem = 1024*6
+allotted_ram_mem = 1024*6
 
 #!! change requires restart
 shared_buffers_memory_cap = int(allotted_ram_mem*0.5)#this is in MB
@@ -235,7 +235,6 @@ data[235] = '#checkpoint_timeout = 5min		# range 30s-1d\n'
 #For the alternative scenario, you'd want to keep this on at a loss of performance
 #Never turn off unless your data is entirely disposable. Setting fsync=off is the equivalent of saying "I do not care about my data, I can recreate the database from scratch if I have to."
 data[228] = '#wal_skip_threshold = 2MB\n' #I think changing this won't do anything since we set fsync to off
-
 
 
 #!! change does not require restart
@@ -528,7 +527,6 @@ data[631] = '#autovacuum_vacuum_scale_factor = 0.2	# fraction of table size befo
 max_num_autovacuum_vacuum_insert_scale_factor = 10.0
 autovacuum_vacuum_insert_scale_factor_refineparam = 0.1
 autovacuum_vacuum_insert_scale_factor_list = [x*autovacuum_vacuum_insert_scale_factor_refineparam for x in range(int(max_num_autovacuum_vacuum_insert_scale_factor/autovacuum_vacuum_insert_scale_factor_refineparam))]
-
 data[632] = '#autovacuum_vacuum_insert_scale_factor = 0.2	# fraction of inserts over table\n'
 
 max_num_autovacuum_analyze_scale_factor = 10.0
@@ -569,7 +567,6 @@ max_locks_per_transaction_refineparam = 16
 max_locks_per_transaction_list = [10 + x*max_locks_per_transaction_refineparam for x in range(int(max_num_max_locks_per_transaction/max_locks_per_transaction_refineparam))]
 data[736] = '#max_locks_per_transaction = 64		# min 10\n'
 
-
 max_num_max_pred_locks_per_transaction = 1024
 max_pred_locks_per_transaction_refineparam = 16
 max_pred_locks_per_transaction_list = [10 + x*max_pred_locks_per_transaction_refineparam for x in range(int(max_num_max_pred_locks_per_transaction/max_pred_locks_per_transaction_refineparam))]
@@ -585,6 +582,14 @@ max_pred_locks_per_page_refineparam = 1
 max_pred_locks_per_page_list = [x*max_pred_locks_per_page_refineparam for x in range(int(max_num_max_pred_locks_per_page/max_pred_locks_per_page_refineparam))]
 data[743] = '#max_pred_locks_per_page = 2            # min 0\n'
 
+
+list_of_knobs_and_knotches = [shared_buffers_list, temp_buffers_list, work_mem_list, hash_mem_multiplier_list, maintenance_work_mem_list, autovacuum_work_mem_list, logical_decoding_work_mem_list, max_stack_depth_list, temp_file_limit_list, backend_flush_after_list, effective_io_concurrency_list, maintenance_io_concurrency_list, max_worker_processes_list, max_parallel_workers_per_gather_list, max_parallel_maintenance_workers_list, max_parallel_workers_list, parallel_leader_participation_list, checkpoint_completion_target_list, checkpoint_flush_after_list, cpu_index_tuple_cost_list, cpu_operator_cost_list, min_parallel_table_scan_size_list, min_parallel_index_scan_size_list, effective_cache_size_list, jit_above_cost_list, jit_inline_above_cost_list, jit_optimize_above_cost_list, geqo_threshold_list, geqo_effort_list, geqo_pool_size_list, geqo_generations_list, geqo_selection_bias_list, geqo_seed_list, default_statistics_target_list, constraint_exclusion_list, cursor_tuple_fraction_list, from_collapse_limit_list, join_collapse_limit_list, plan_cache_mode_list, autovacuum_max_workers_list, autovacuum_vacuum_threshold_list, autovacuum_vacuum_insert_threshold_list, autovacuum_analyze_threshold_list, autovacuum_vacuum_scale_factor_list, autovacuum_vacuum_insert_scale_factor_list, autovacuum_analyze_scale_factor_list, autovacuum_freeze_max_age_list, autovacuum_multixact_freeze_max_age_list, autovacuum_vacuum_cost_delay_list, autovacuum_vacuum_cost_limit_list, deadlock_timeout_list, max_locks_per_transaction_list, max_pred_locks_per_transaction_list, max_pred_locks_per_relation_list, max_pred_locks_per_page_list]
+list_of_knobs_line_indexes = [data[126], data[132], data[137], data[138], data[139], data[140], data[141], data[142], data[160], data[185], data[186], data[187], data[188], data[189], data[190], data[191], data[193], data[236], data[237], data[386], data[387], data[390], data[391], data[392], data[394], data[397], data[399], data[406], data[407], data[408], data[409], data[410], data[411], data[415], data[416], data[417], data[418], data[420], data[422], data[621], data[624], data[626], data[629], data[631], data[632], data[634], data[635], data[637], data[640], data[643], data[735], data[736], data[738], data[740], data[743]]
+print(len(list_of_knobs_line_indexes))
+#there are 55 knobs to tune.
+
+#Need to get rid of the comments on the postgresql.conf file and then change data[i] directly
+#Also need to efficiently change the lines of the pg conf file as well (right now it's reading the entire file and writing out the entire file each time.)
 
 #configslist = itertools.product(shared_buffers_list, temp_buffers_list, , max_pred_locks_per_relation_list, max_pred_locks_per_page_list)
 #for congifuration in configslist:
