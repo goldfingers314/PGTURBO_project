@@ -1,0 +1,55 @@
+shared_buffers_list: 0.5 of memory, 96 elements
+temp_buffers_list: 0.1 of memory, 160 elements
+work_mem_list: 0.2 of memory, 62 elements
+hash_mem_multiplier_list: 10 elements
+maintenance_work_mem_list: 0.2 of memory, 38 elements
+autovacuum_work_mem_list: 0.1 of memory, 20 elements
+logical_decoding_work_mem_list: 0.1 of memory, 20 elements
+max_stack_depth_list: 0.1 of memory, 320 elements
+temp_file_limit_list: 100 elements
+backend_flush_after_list: 256 elements
+effective_io_concurrency_list: 1000 elements
+maintenance_io_concurrency_list: 100 elements
+max_worker_processes_list: 100 elements
+max_parallel_workers_per_gather_list: 512 elements
+max_parallel_maintenance_workers_list: 512 elements
+max_parallel_workers_list: 512 elements
+parallel_leader_participation_list: 2 elements
+checkpoint_completion_target_list: 10 elements
+checkpoint_flush_after_list: 256 elements
+cpu_index_tuple_cost_list: 10 elements
+cpu_operator_cost_list: 20 elements
+min_parallel_table_scan_size_list: 77
+min_parallel_index_scan_size_list: 77
+effective_cache_size_list: 68
+jit_above_cost_list: 20
+jit_inline_above_cost_list: 10
+jit_optimize_above_cost_list: 10
+geqo_threshold_list: 20
+geqo_effort_list: 11
+geqo_pool_size_list: 100
+geqo_generations_list: 200
+geqo_selection_bias_list: 200
+geqo_seed_list: 100
+default_statistics_target_list: 100
+constraint_exclusion_list: 3
+cursor_tuple_fraction_list: 10
+from_collapse_limit_list: 200
+join_collapse_limit_list: 200
+plan_cache_mode_list: 3
+autovacuum_max_workers_list: 20
+autovacuum_vacuum_threshold_list: 100
+autovacuum_vacuum_insert_threshold_list: 20
+autovacuum_analyze_threshold_list: 100
+autovacuum_vacuum_scale_factor_list: 100
+autovacuum_vacuum_insert_scale_factor_list: 100
+autovacuum_analyze_scale_factor_list: 100
+autovacuum_freeze_max_age_list: 20
+autovacuum_multixact_freeze_max_age_list: 20
+autovacuum_vacuum_cost_delay_list: 102
+autovacuum_vacuum_cost_limit_list: 100
+deadlock_timeout_list: 6
+max_locks_per_transaction_list: 16
+max_pred_locks_per_transaction_list: 16
+max_pred_locks_per_relation_list: 128
+max_pred_locks_per_page_list: 100
