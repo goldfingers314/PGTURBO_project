@@ -1,0 +1,18 @@
+columns for addresses
+id, npi, line1, line2, city, state, postal, country, phone, fax
+
+colums for npi
+id, npi, entity_type, repl_npi, ein, org_name, last_name, first_name, middle_name, name_prefix, name_suffix, credentials, 
+other_org_name,other_org_name_type,other_last_name, other_first_name,other_middle_name, other_name_prefix, other_name_suffix, other_credentials
+other_last_name_code, addr_mail_first, addr_mail_second,addr_mail_city,addr_mai_state,addr_mail_postal,addr_mail_country, addr_mail_phone, addr_mail_fax,
+addr_practice_first,addr_practice_second,addr_practice_city,addr_practice_state,addr_practice_country,addr_practice_phone,addr_practice_fax,enumeration_date,
+last_update,deactivate_reason
+
+colums for core_npi
+id,npi,lastname,first_name,description,state,city,zip,addr_first,addr_last,phone
+
+columns for raw_pl
+npi, second_add_1,second_add_2,second_city,second_state,postal_code,country_code,phone,extension,fax
+
+columns for taxonomy
+id,code,grouping,classification,specialization,definition,effective_date,deactivation_date,last_mod_date,notes,display_name
