@@ -1,4 +1,4 @@
 BEGIN;
 SELECT taxonomy.specialization, addresses.phone 
-FROM taxonomy,addresses WHERE adresses.id = taxonomy.id ;
+FROM taxonomy,addresses WHERE addresses.id = taxonomy.id ;
 END;
