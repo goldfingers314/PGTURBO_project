@@ -1,5 +1,6 @@
 #!bin/bash
 t="0"
+pgbench -i providerlookup
 sudo touch sample.txt
 while [ $t -le 100000 ];do
 python3 filewriter.py
