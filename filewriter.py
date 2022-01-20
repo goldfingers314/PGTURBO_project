@@ -5,6 +5,7 @@ import itertools
 import pprint
 from itertools import product
 import copy
+import subprocess
 
 
 def cartesian_product(list1):
@@ -630,3 +631,11 @@ data = paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_in
 
 with open('test.txt', 'w') as file:
     file.writelines( data )
+
+
+#####   bash stuff   ###############3
+subprocess.run(['sudo', 'touch', 'sample.txt'])  # creates txt for output
+subprocess.run(['pgbench', '-i' ,'providerlookup'])  # initialises pgbench
+subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
+
+
