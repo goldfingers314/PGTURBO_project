@@ -4,7 +4,7 @@ FROM taxonomy,addresses WHERE addresses.id = taxonomy.id ;
 END;
 BEGIN;
 CREATE INDEX test_id1 ON core_npi USING hash("npi");
-SELECT COUNT(*) FROM core_npi WHERE core_npi.npi LIKE '1%' GROUP BY core_npi.last_name;
+SELECT COUNT(*) FROM core_npi WHERE CAST(core_npi.npi AS VARCHAR) LIKE '1%' GROUP BY core_npi.last_name;
 DROP INDEX test_id1;
 END;
 BEGIN;
@@ -39,16 +39,8 @@ BEGIN;
 SELECT npi_taxonomy.npi, npi_taxonomy.license_num, temp_table.id 
 FROM (SELECT * FROM addresses WHERE addresses.state = 'Kentucky') AS temp_table LEFT JOIN npi_taxonomy ON npi_taxonomy.license_num IS NOT NULL;
 END;
---BEGIN;
---CREATE INDEX test_id2 ON addresses using gin(city);
---DROP INDEX test_id2;
---END;
---BEGIN;
---CREATE INDEX test_id3
---ON taxonomy USING gist(specialization);
---SELECT * FROM taxonomy WHERE taxonomy.specialization = "ENT";
---DROP INDEX test_id3
---END;
+BEGIN;
+
 
 
   
