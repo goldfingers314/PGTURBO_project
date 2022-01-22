@@ -1,3 +1,40 @@
+#*******************************************************************************#
+#										#
+# FILE: filewriter.py								#
+#										#
+# USAGE: python3 filewriter.py 								#
+#										#
+# DESCRIPTION: Insert description of the script here.				#
+#										#
+# OPTIONS: List options for the script [-h]					#
+#										#
+# ERROR CONDITIONS: exit 1 ---- Invalid option					#
+#                   exit 2 ----	Cannot change to verbus directory               #
+#                   exit 3 ----	git command failed				#
+#                   exit 4 ----	Cannot change to redis directory		#
+#                   exit 5 ----	make failed					#
+#                   exit 6 ----	make test failed				#
+#                   exit 99 ---	killed by external forces			#
+#										#
+# DEVELOPER: Verbus M. Counts							#
+# DEVELOPER PHONE: +1 (405) 326-7440						#
+# DEVELOPER EMAIL: verbus@gmail.com        					#
+#										#
+# VERSION: 1.0									#
+# CREATED DATE-TIME: 20211211-09:00 Central Time Zone USA			#
+#										#
+# VERSION: 1.1									#
+# REVISION DATE-TIME: YYYYMMDD-HH:MM						#
+# DEVELOPER MAKING CHANGE: First_name Last_name					#
+# DEVELOPER MAKING CHANGE: PHONE: +1 (XXX) XXX-XXXX				#
+# DEVELOPER MAKING CHANGE: EMAIL: first.last@email.com				#
+#										#
+#/* Copyright (C) EMR Technical Solutions, LLC - All Rights Reserved            #
+# * Unauthorized copying of this file, via any medium is strictly prohibited    #
+# * Proprietary and confidential.                                               #
+# */                                                                            #
+#*******************************************************************************#
+
 import os
 import sys
 import fileinput
@@ -6,6 +43,10 @@ import pprint
 from itertools import product
 import copy
 import subprocess
+import time
+
+
+#add a giant descriptor and way more comments like the redis.sh
 
 
 def cartesian_product(list1):
@@ -30,9 +71,14 @@ def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_index
 
 	for j in listofconfigs_changing:
 		for i in range(len(list_of_knobs_to_tune)):
+			#time.sleep(10)
 			knob_i_data_line_split = datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]].split(' ')
 			knob_i_data_line_split[2] = str(j[i])+list_of_knobs_units[list_of_knobs_to_tune[i]]
 			datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]] = ' '.join(knob_i_data_line_split)
+		with open('/usr/local/share/postgresql/postgresql.conf.sample', 'w') as file: file.writelines( datacopy )	
+		subprocess.run(['sudo', 'touch', 'sample.txt'])  # creates txt for output
+		subprocess.run(['pgbench', '-i' ,'provider_lookup'])  # initialises pgbench
+		subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
 			#print(datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]])
 	#print('\n')
 
@@ -617,21 +663,18 @@ list_of_knobs_units = ['MB', 'MB', 'MB', '', 'MB', 'MB', 'MB', 'MB', '', '', '',
 #there are 55 knobs to tune.
 
 datacopy = copy.deepcopy(data)
-
-list_of_knobs_to_tune = [0,1]
+list_of_knobs_to_tune = [34,38]
 data = paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, list_of_knobs_to_tune)
 
-#Need to get rid of the comments on the postgresql.conf file and then change data[i] directly
-#Also need to efficiently change the lines of the pg conf file as well (right now it's reading the entire file and writing out the entire file each time.)
+# take a small sample of each of the parameters and get an approximation on how much variance each parameter has
+# then create a sequence of variances for each parameter
+# then make the groups accordingly (like group by variances instead of just of computational stuff)
+# look for scale factor differences
 
+# frequency: of queries put in (like which ones do you actually care about wrt queries) [LATER]
 
 # and write everything back
-
 
 with open('/usr/local/share/postgresql/postgresql.conf.sample', 'w') as file:
     file.writelines( data )
 
-#####   bash stuff   ###############3
-subprocess.run(['sudo', 'touch', 'sample.txt'])  # creates txt for output
-subprocess.run(['pgbench', '-i' ,'provider_lookup'])  # initialises pgbench
-subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
