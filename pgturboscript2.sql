@@ -5,5 +5,3 @@ END;
 
 
 
-
-ubunutu
