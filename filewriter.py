@@ -48,6 +48,8 @@ import time
 
 #add a giant descriptor and way more comments like the redis.sh
 
+subprocess.run(['sudo', 'touch', 'sample.csv'])  # creates txt for output
+subprocess.run(['pgbench', '-i' ,'provider_lookup'])  # initialises pgbench
 
 def cartesian_product(list1):
 	size = len(list1)
@@ -76,8 +78,8 @@ def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_index
 			knob_i_data_line_split[2] = str(j[i])+list_of_knobs_units[list_of_knobs_to_tune[i]]
 			datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]] = ' '.join(knob_i_data_line_split)
 		with open('/usr/local/share/postgresql/postgresql.conf.sample', 'w') as file: file.writelines( datacopy )	
-		subprocess.run(['sudo', 'touch', 'sample.txt'])  # creates txt for output
-		subprocess.run(['pgbench', '-i' ,'provider_lookup'])  # initialises pgbench
+		
+		
 		subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
 			#print(datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]])
 	#print('\n')
