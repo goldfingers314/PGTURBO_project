@@ -48,8 +48,8 @@ import time
 
 #add a giant descriptor and way more comments like the redis.sh
 
-subprocess.run(['sudo', 'touch', 'sample.csv'])  # creates txt for output
-subprocess.run(['pgbench', '-i' ,'provider_lookup'])  # initialises pgbench
+subprocess.run(['bash', 'pgin'])  # creates csv for output and  initialises pgbench
+  
 
 def cartesian_product(list1):
 	size = len(list1)
