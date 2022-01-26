@@ -16,9 +16,9 @@
 #                   exit 6 ----	make test failed				#
 #                   exit 99 ---	killed by external forces			#
 #										#
-# DEVELOPER: Verbus M. Counts							#
-# DEVELOPER PHONE: +1 (405) 326-7440						#
-# DEVELOPER EMAIL: verbus@gmail.com        					#
+# DEVELOPER: 							#
+# DEVELOPER 						#
+# DEVELOPER EMAIL:         					#
 #										#
 # VERSION: 1.0									#
 # CREATED DATE-TIME: 20211211-09:00 Central Time Zone USA			#
@@ -48,9 +48,9 @@ import time
 
 #add a giant descriptor and way more comments like the redis.sh
 
-subprocess.run(['bash', 'pgin'])  # creates csv for output and  initialises pgbench
-  
+subprocess.run(['bash', 'pgin.sh'])  # creates csv for output and  initialises pgbench
 
+#Makes cartesian product of lists
 def cartesian_product(list1):
 	size = len(list1)
 	tempans = []
@@ -63,7 +63,8 @@ def cartesian_product(list1):
 		tempans = list(product(tempans, list1[i+1]))
 	return tempans
 
-
+#Iterates through parameters depending on which parameters you choose via list_of_knobs_to_tune
+#Makes a copy of datacopy and writes that and then writes original data back.
 def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, list_of_knobs_to_tune):
 	tempstringlist = []
 	list1 = []
@@ -72,17 +73,25 @@ def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_index
 	listofconfigs_changing = cartesian_product(list1)
 
 	for j in listofconfigs_changing:
+		original_stdout = sys.stdout
+		with open('sample.txt', 'a') as F: 
+			sys.stdout = F 
+			print(j) 
+			sys.stdout = original_stdout
 		for i in range(len(list_of_knobs_to_tune)):
 			#time.sleep(10)
 			knob_i_data_line_split = datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]].split(' ')
 			knob_i_data_line_split[2] = str(j[i])+list_of_knobs_units[list_of_knobs_to_tune[i]]
 			datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]] = ' '.join(knob_i_data_line_split)
 		with open('/usr/local/share/postgresql/postgresql.conf.sample', 'w') as file: file.writelines( datacopy )	
-		
-		
 		subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
 			#print(datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]])
 	#print('\n')
+	original_stdout = sys.stdout
+	with open('sample.csv', 'a') as F: 
+		sys.stdout = F 
+		print('\n') 
+		sys.stdout = original_stdout
 
 	return data
 
