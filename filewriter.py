@@ -16,9 +16,9 @@
 #                   exit 6 ----	make test failed				#
 #                   exit 99 ---	killed by external forces			#
 #										#
-# DEVELOPER: 							#
-# DEVELOPER 						#
-# DEVELOPER EMAIL:         					#
+# DEVELOPER: Verbus M. Counts							#
+# DEVELOPER PHONE: +1 (405) 326-7440						#
+# DEVELOPER EMAIL: verbus@gmail.com        					#
 #										#
 # VERSION: 1.0									#
 # CREATED DATE-TIME: 20211211-09:00 Central Time Zone USA			#
@@ -50,45 +50,38 @@ import time
 
 subprocess.run(['bash', 'pgin.sh'])  # creates csv for output and  initialises pgbench
 
-#Makes cartesian product of lists
-def cartesian_product(list1):
-	size = len(list1)
-	tempans = []
-	if size == 1:
-		return list1[0]
-	if size == 0:
-		return tempans
-	tempans = list1[0]
-	for i in range(size-1):
-		tempans = list(product(tempans, list1[i+1]))
-	return tempans
 
-#Iterates through parameters depending on which parameters you choose via list_of_knobs_to_tune
-#Makes a copy of datacopy and writes that and then writes original data back.
-def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, list_of_knobs_to_tune):
-	tempstringlist = []
-	list1 = []
-	for i in list_of_knobs_to_tune:
-		list1.append(list_of_knobs_and_knotches[i])
-	listofconfigs_changing = cartesian_product(list1)
+# def cartesian_product(list1):
+# 	size = len(list1)
+# 	tempans = []
+# 	if size == 1:
+# 		return [list1[0]]
+# 	if size == 0:
+# 		return tempans
+# 	tempans = list1[0]
+# 	for i in range(size-1):
+# 		tempans = list(product(tempans, list1[i+1]))
+# 	return tempans
 
-	for j in listofconfigs_changing:
+
+def paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, knob_to_tune):
+
+	for j in list_of_knobs_and_knotches[knob_to_tune]:
 		original_stdout = sys.stdout
 		with open('sample.txt', 'a') as F: 
 			sys.stdout = F 
 			print(j) 
 			sys.stdout = original_stdout
-		for i in range(len(list_of_knobs_to_tune)):
-			#time.sleep(10)
-			knob_i_data_line_split = datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]].split(' ')
-			knob_i_data_line_split[2] = str(j[i])+list_of_knobs_units[list_of_knobs_to_tune[i]]
-			datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]] = ' '.join(knob_i_data_line_split)
+		#time.sleep(10)
+		knob_data_line_split = datacopy[list_of_knobs_line_indexes[knob_to_tune]].split(' ')
+		# print(knob_i_data_line_split)
+		# print(knob_i_data_line_split[2])
+		# print(j)
+		knob_data_line_split[2] = str(j)+list_of_knobs_units[knob_to_tune]
+		datacopy[list_of_knobs_line_indexes[knob_to_tune]] = ' '.join(knob_data_line_split)
 		with open('/usr/local/share/postgresql/postgresql.conf.sample', 'w') as file: file.writelines( datacopy )	
 		subprocess.run(['bash', 'pgpy.sh'])  # actually runs pgbench stuff
-			#print(datacopy[list_of_knobs_line_indexes[list_of_knobs_to_tune[i]]])
-	#print('\n')
-	original_stdout = sys.stdout
-	with open('sample.csv', 'a') as F: 
+	with open('sample.txt', 'a') as F: 
 		sys.stdout = F 
 		print('\n') 
 		sys.stdout = original_stdout
@@ -674,8 +667,8 @@ list_of_knobs_units = ['MB', 'MB', 'MB', '', 'MB', 'MB', 'MB', 'MB', '', '', '',
 #there are 55 knobs to tune.
 
 datacopy = copy.deepcopy(data)
-list_of_knobs_to_tune = [34,38]
-data = paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, list_of_knobs_to_tune)
+knob_to_tune = 1
+data = paramiterator(datacopy, list_of_knobs_and_knotches, list_of_knobs_line_indexes, list_of_knobs_units, knob_to_tune)
 
 # take a small sample of each of the parameters and get an approximation on how much variance each parameter has
 # then create a sequence of variances for each parameter
