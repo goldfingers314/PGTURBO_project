@@ -11,18 +11,29 @@ a=$?
 done
 
 #calculates our y-vector
-z=$(pgbench -c 1 t -1 -f pgturboscript1.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-y=$(pgbench -c 1 t -1 -f pgturboscript1a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')  
-x=$(pgbench -c 1 t -1 -f pgturboscript1b.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-w=$(pgbench -c 1 t -1 -f pgturboscript1c.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-v=$(pgbench -c 1 t -1 -f pgturboscript1d.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-u=$(pgbench -c 1 t -1 -f pgturboscript1e.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-t=$(pgbench -c 1 t -1 -f pgturboscript2.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-s=$(pgbench -c 1 t -1 -f pgturboscript2a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')  
-r=$(pgbench -c 1 t -1 -f pgturboscript2b.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-q=$(pgbench -c 1 t -1 -f pgturboscript3.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
-p=$(pgbench -c 1 t -1 -f pgturboscript3a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')
-final=$(bc <<< "scale=7; ($z+$y+x+$w+v+$u+$t+$s+$r+$q+$p)/11")
+
+sudo -u postgres -H -- psql -d provider_lookup -c "CREATE TABLE dupli AS SELECT * FROM npi WHERE npi.addr_practce_state="Oklahoma""
+
+a=$(pgbench -c 1 -t 1 -f pgturboscript4.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')
+b=$(pgbench -c 1 -t 1 -f pgturboscript4a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')
+c=$(pgbench -c 1 -t 1 -f pgturboscript4b.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+d=$(pgbench -c 1 -t 1 -f pgturboscript4c.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*') 
+
+sudo -u postgres -H -- psql -d provider_lookup -c "DROP TABLE dupli"
+
+z=$(pgbench -c 1 -t 1 -f pgturboscript1.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+y=$(pgbench -c 1 -t 1 -f pgturboscript1a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')  
+x=$(pgbench -c 1 -t 1 -f pgturboscript1b.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+w=$(pgbench -c 1 -t 1 -f pgturboscript1c.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+v=$(pgbench -c 1 -t 1 -f pgturboscript1d.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+u=$(pgbench -c 1 -t 1 -f pgturboscript1e.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+t=$(pgbench -c 1 -t 1 -f pgturboscript2.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+s=$(pgbench -c 1 -t 1 -f pgturboscript2a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')  
+r=$(pgbench -c 1 -t 1 -f pgturboscript2b.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+q=$(pgbench -c 1 -t 1 -f pgturboscript3.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')   
+p=$(pgbench -c 1 -t 1 -f pgturboscript3a.sql provider_lookup | grep 'tps' | grep -Eo '[0-9]*\.[0-9]*')
+final=$(bc <<< "scale=7; ($z+$y+x+$w+v+$u+$t+$s+$r+$q+$p+$a+$b+$c+$d)/11")
+
 
 #updates csv
 sudo chmod -R 777 sample.csv
